@@ -104,9 +104,9 @@ var vm = new Vue({
       console.log(this.highlightedChrom)
       for (var k in cpnt.probeCircles) {
         if (k.split(':')[0] == this.highlightedChrom) {
-          cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.8);
+          cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.6);
         } else {
-          cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.3);
+          cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.2);
         }
       }
       this.alleleList = ["Cluster 1", "Cluster 2", "Unknown", "All"];
@@ -128,27 +128,27 @@ var vm = new Vue({
         //
         if (this.highlightedAllele == "All") {
           if (probeChrom == this.highlightedChrom) {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.8);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.6);
           } else {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.3);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.2);
           }
         } else if (this.highlightedAllele == "Cluster 1") {
           if (probeChrom == this.highlightedChrom && probeCluster == "Cluster 1") {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.8);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.6);
           } else {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.3);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.2);
           }
         } else if (this.highlightedAllele == "Cluster 2") {
           if (probeChrom == this.highlightedChrom && probeCluster == "Cluster 2") {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.8);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.6);
           } else {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.3);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.2);
           }
         } else if (this.highlightedAllele == "Unknown") {
           if (probeChrom == this.highlightedChrom && probeCluster == "Unknown") {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.8);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.6);
           } else {
-            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.3);
+            cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.2);
           }
         } else {
           
@@ -273,12 +273,38 @@ const css = `
   :host {
     initial: all
   }
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: var(--paddingLeft);
+    padding-right: 50px;
+    padding-top: 120px;
+    padding-bottom: 300px;
+    background-color: #000;
+  }
   .img-container {
     height:100%;
     float: left;
     display: block;
     padding: 5px;
     position: relative;
+    transition-duration: 0.8s;
+    transform: skewY(var(--skewy)) translateY(var(--translatey)) scale(var(--scale));
+    transform-origin: center;
+    margin-left: var(--marginLeft);
+    margin-top: 20px;
+    -webkit-box-shadow: 0 0 4px #fff;
+    box-shadow: 0 0 4px #fff;
+    z-index: 200;
+  }
+  .img-container:hover {
+    -webkit-transform-style: preserve-3d;
+    -webkit-box-shadow: 0 0 12px #fff;
+    box-shadow: 0 0 8px #fff;
+    transform: skewY(0deg) translateY(-10px) scale(2.0);
+    margin-left: 100px;
+    margin-right: 220px;
+    z-index: 300;
   }
   .img-container svg {
     position:absolute;
@@ -288,22 +314,21 @@ const css = `
     height: 100%;
   }
   svg circle:hover {
-    opacity: 0.8;
+    opacity: 0.6;
   }
   .header {
-    min-height: 30px;
-    background-color: #EEE;
+    height: 75px;
+    padding-left: 50px;
+    padding-top: 30px;
+    background-color: #fff;
   }
   .loading {
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
-    height: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url('/images/loading.gif');
+    display:block;
+    margin: auto;
+    background-image: url('/images/loading_reverse.gif');
     background-repeat: no-repeat;
+    height:100%;
+    float: left;
   }
   .popup {
     width: 260px;
@@ -314,6 +339,7 @@ const css = `
     border-radius: 4px;
     position: absolute;
     display: none;
+    z-index: 300;
   }
   .popup::before {
     content: "";
@@ -324,6 +350,67 @@ const css = `
     position: absolute;
     left: -6px;
     top: 15px;
+    z-index: 300;
+  }
+  .mode-button {
+    margin: auto;
+    background-color: #eee; 
+    border: none;
+    color: black;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+  .mode-button:hover {
+    cursor: pointer;
+  }
+  .plane-text {
+    margin-left: 40px;
+    font-size: 16px;
+  }
+  .value-button {
+    display: inline-block;
+    border: 1px solid #ddd;
+    margin: 0px;
+    width: 40px;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 11px 0;
+    background: #eee;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-right: -4px;
+    border-radius: 8px 0 0 8px;
+  }
+  .value-button:hover {
+    cursor: pointer;
+  }
+  #increase {
+    margin-left: 0px
+    margin-right: 40px;
+    border-radius: 0 8px 8px 0;
+  }
+  #decrease {
+    margin-left: 5px; 
+    margin-right: 0px;
+    border-radius: 8px 0 0 8px;
+  }
+  .input-number {
+    text-align: center;
+    border: none;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin: 0px;
+    width: 40px;
+    height: 40px;
   }
 `;
 // TODO Adapt to New Data Base Interface
@@ -389,7 +476,7 @@ const drawProbes = (self) => {
   var probeCircles = {}
   // tooltip popup
   var popup = self.div.getElementsByClassName("popup")[0];
-  console.log(popup);
+  //console.log(popup);
   self.probeCircles = probeCircles
   // TODO Add Circle Map ... 
   self.probes.forEach((d) => {
@@ -404,8 +491,8 @@ const drawProbes = (self) => {
         circle.setAttributeNS(null, 'stroke-opacity', 0.15)
         circle.addEventListener("mouseover",(e)=>{
             var iconPos = svg.getBoundingClientRect();
-            popup.style.left = (iconPos.left + d.x + 20) + "px";
-            popup.style.top = (window.scrollY + iconPos.top + d.y - 23) + "px";
+            popup.style.left = (iconPos.left + d.x*2 + 35) + "px";
+            popup.style.top = (window.scrollY + iconPos.top + d.y*2 - 23) + "px";
             popup.style.display = "block";
             popup.innerHTML = `Probe: ${d.chr}:${d.start}-${d.end}; Allele:${d.cluster}`;
             //self.header.innerHTML = `Probe location: ${d.chr}:${d.start}-${d.end};  Allele:${d.cluster}`;
@@ -414,9 +501,16 @@ const drawProbes = (self) => {
           popup.style.display = "none"
         })
         circle.addEventListener("click", (e)=>{
-            window.open(`${self.server}/iviewer/?shape=${d.shape}`)
+          window.open(`${self.server}/iviewer/?shape=${d.shape}`)
+          var regions = [{
+            genome: "hg38",
+            chr: d.chr,
+            start: d.start - 20000,
+            end: d.end + 20000,
+            color: "#336289"
+          }]
+          c.call("update", this, regions)
         })
-    
         // circle map ... 
         probeCircles[`${d.chr}:${d.start}-${d.end}:${d.cluster}`] = circle
         svg.appendChild(circle);
@@ -455,7 +549,7 @@ class IDRImage extends HTMLElement {
       mode: "open"
     });
     this.container = h("div")
-    this.container.className = "loading"
+    //this.container.className = "loading"
     this.header = h("div")
     this.header.className = "header"
     this.div = h("div");
@@ -463,17 +557,111 @@ class IDRImage extends HTMLElement {
     this.tooltip.className = "popup"
     var style = h("style");
     style.innerHTML = css;
+    // text
+    var planeText = h("a")
+    planeText.innerHTML = "Time point";
+    planeText.className = "plane-text";
+    // button to change view
+    var modeBtn = h("input")
+    modeBtn.setAttribute("type", "button")
+    modeBtn.setAttribute("value", "View mode");
+    modeBtn.className = "mode-button"
+    this.header.append(modeBtn);
+    // tool to change plane 
+    var decreaseBtn = h("div");
+    decreaseBtn.className = "value-button";
+    decreaseBtn.setAttribute('id', 'decrease');
+    decreaseBtn.innerHTML = "-";
+    var planeInput = h("input");
+    planeInput.className = "input-number";
+    planeInput.setAttribute("type", "nubmer");
+    planeInput.value =  options.planeId;
+    var increaseBtn = h("div");
+    increaseBtn.className = "value-button";
+    increaseBtn.setAttribute('id', 'increase');
+    increaseBtn.innerHTML = "+";
+    this.header.append(planeText)
+    this.header.append(decreaseBtn)
+    this.header.append(planeInput)
+    this.header.append(increaseBtn)
+    //
     this.container.appendChild(this.header)
     this.container.appendChild(this.div)
     this.shadow.appendChild(style);
+    // Add button click event to control planeID
+    decreaseBtn.onclick = () => {
+      let currentPlaneId = self.planeId;
+      if (self.planeId > 0) {
+        self.planeId -= 1;
+      } else {
+        self.planeId = 0;
+      }
+      planeInput.value =  self.planeId + 1;
+      let imgContainerList = self.div.getElementsByClassName("img-container");
+      let counterDes= 0;
+      for (var i = 0; i < imgContainerList.length; i++) {
+        var img = imgContainerList[i].getElementsByTagName('img')[0];
+        img.className = "loading";
+        img.src = img.src.replace(`${currentPlaneId}/?c=`, `${self.planeId}/?c=`)
+        img.addEventListener( 'load', imageCounter, false );
+      }
+      // helper function 
+      function imageCounter() {
+        counterDes ++;
+        this.classList.remove("loading");
+        this.removeEventListener('load', imageCounter, false)
+      }
+    }
+    increaseBtn.onclick = () => {
+      let currentPlaneId = self.planeId;
+      if (self.planeId < self.data.size.t -1 ) {
+        self.planeId += 1;
+      } else {
+        self.planeId = self.data.size.t - 1;
+      }
+      planeInput.value =  self.planeId + 1;
+      let imgContainerList = self.div.getElementsByClassName("img-container");
+      let counterInc = 0;
+      for (var i = 0; i < imgContainerList.length; i++) {
+        var img = imgContainerList[i].getElementsByTagName('img')[0];
+        img.className = "loading";
+        img.src = img.src.replace(`${currentPlaneId}/?c=`, `${self.planeId}/?c=`)
+        img.addEventListener( 'load', imageCounter, false );
+      }
+      // helper function 
+      function imageCounter() {
+        counterInc ++;
+        this.classList.remove("loading");
+        this.removeEventListener('load', imageCounter, false)
+      }
+    }
+    // Add button click eevet to control view mode
+    var mode = 1;
+    var root = this;
+    modeBtn.onclick = () => {
+      mode = (mode + 1) % 2;
+      if (mode == 1) {
+        root.style.setProperty("--skewy", "-20deg");
+        root.style.setProperty("--translatey", "-10px");
+        root.style.setProperty("--scale", "0.80");
+        root.style.setProperty("--marginLeft", "-120px");
+        root.style.setProperty("--paddingLeft", "240px");
+      } else {
+        root.style.setProperty("--skewy", "0deg");
+        root.style.setProperty("--translatey", "0px");
+        root.style.setProperty("--scale", "1.0");
+        root.style.setProperty("--marginLeft", "20px")
+        root.style.setProperty("--paddingLeft", "50px");
+      }
+    };
     // TODO Add Meta Id and Data Id
     this.shadow.appendChild(this.container);
     this.server = options.server || defaultServer;
     // TODO add control of the planeId
     this.planeId = options.planeId;
-
     this.addEventListener("ready", () => {
       // self.data.size.z
+      console.log(self.data.size)
       var es = Array.apply(null, Array(self.data.size.z)).map(function () {
         var e = h("div");
         e.className = "img-container";
@@ -482,13 +670,16 @@ class IDRImage extends HTMLElement {
       var counter = 0;
       es.forEach((d, i) => {
         var g = h("img");
-        //g.className = "loading";
+        g.setAttribute("width", self.data.size.width);
+        g.setAttribute("height", self.data.size.height);
+        g.className = "loading";
         g.setAttribute(
           "src",
           `${self.server}/webclient/render_image/${self.data.id}/${i}/${self.planeId}/?c=1|$FF0000,2|$00FF00,3|$0000FF,4|$ffff00`
         );
         if(g.complete) {
           imageCounter();
+          g.classList.remove("loading");
         }
         else {
           g.addEventListener( 'load', imageCounter, false );
@@ -504,7 +695,7 @@ class IDRImage extends HTMLElement {
         newText.setAttributeNS(null, "y", self.data.size.height - 8);
         newText.setAttributeNS(null, "fill", "#ffffff")
         newText.setAttributeNS(null, "font-size", "14");
-        var textNode = document.createTextNode(`Z=${i}`);
+        var textNode = document.createTextNode(`Z=${i+1}`);
         newText.appendChild(textNode);
         svg.appendChild(newText);
         // Add svg
@@ -519,9 +710,16 @@ class IDRImage extends HTMLElement {
       function imageCounter() {
         counter ++;
         if (counter == es.length) {
-          self.container.classList.remove("loading")
-          drawProbes(self)
+          //self.container.classList.remove("loading")
+          self.div.className = "content";
+          drawProbes(self);
+          root.style.setProperty("--skewy", "-20deg");
+          root.style.setProperty("--translatey", "-10px");
+          root.style.setProperty("--scale", "0.80");
+          root.style.setProperty("--marginLeft", "-120px");
+          root.style.setProperty("--paddingLeft", "240px");
         }
+        self.classList.remove("loading");
       }
     });
 
@@ -591,24 +789,14 @@ container.appendChild(cpnt);
 
 c.on("brush",(d) => {
   for (var k in cpnt.probeCircles) {
-    cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.3)
+    cpnt.probeCircles[k].setAttributeNS(null, "opacity", 0.2)
   }
   d.forEach((d,i)=>{
     var a = cpnt.bin.Query(d)
-    console.log(i,a)
+    //console.log(i,a)
     a.forEach((d)=>{
-      cluster_0 = `${d.chr}:${d.start}-${d.end}:0`
-      cluster_1 = `${d.chr}:${d.start}-${d.end}:1`
-      cluster_2 = `${d.chr}:${d.start}-${d.end}:2`
-      if (cluster_0 in cpnt.probeCircles) {
-        var circle = cpnt.probeCircles[cluster_0]
-      } else if (cluster_1 in cpnt.probeCircles) {
-        var circle = cpnt.probeCircles[cluster_1]
-      } else if (cluster_2 in cpnt.probeCircles) {
-        var circle = cpnt.probeCircles[cluster_2]
-      }
-      //var circle = cpnt.probeCircles[`${d.chr}:${d.start}-${d.end}:${d.cluster}`]
-      circle.setAttributeNS(null, "opacity", 0.8);
+      var circle = cpnt.probeCircles[`${d.chr}:${d.start}-${d.end}:${d.cluster}`]
+      circle.setAttributeNS(null, "opacity", 0.6);
     })
     
     // TODO HighLight Response ... 
